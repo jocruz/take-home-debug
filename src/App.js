@@ -1,8 +1,7 @@
-import { useCallback } from "react";
-import { Routes, Route } from "react-router-dom";
+import { useCallback, useState } from "react";
+import { Routes, Route, useNavigate } from "react-router-dom";
 import { magic } from "./lib/magic";
-import { useNavigate, useState } from "react-router-dom";
-import Login from "./Login";
+import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 
 function App() {
@@ -11,7 +10,7 @@ function App() {
 
   const getMetadata = useCallback(async () => {
     try {
-      const metadata = await magic.user.getInfo();
+      const metadata = await magic.user.getMetadata();
       setUser(metadata);
     } catch (err) {
       navigate("/");
@@ -21,7 +20,7 @@ function App() {
 
   const printMetadata = useCallback(async () => {
     try {
-      const metadata = await magic.user.getInfo();
+      const metadata = await magic.user.getMetadata();
       console.log(metadata);
     } catch (err) {
       console.error(err);
@@ -41,22 +40,18 @@ function App() {
   return (
     <div className="App">
       <Routes>
-        <Route 
-          path="/" 
+        <Route path="/" element={<Login isRedirect={getMetadata} />} />
+        <Route
+          path="/dashboard"
           element={
-            <Login isRedirect={getMetadata}/>
-          } 
-        />
-        <Route 
-          path="/dashboard" 
-          element={
-            <Dashboard 
+            <Dashboard
               user={user}
               logout={logout}
               setUser={setUser}
               printMetadata={printMetadata}
+              getMetadata={getMetadata}
             />
-          } 
+          }
         />
       </Routes>
     </div>

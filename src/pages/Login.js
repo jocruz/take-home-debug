@@ -1,14 +1,17 @@
 import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaGoogle } from "react-icons/fa";
+import { magic } from "../lib/magic";
 
 const Login = () => {
   const navigate = useNavigate();
 
   const handleEmailOtpLogin = useCallback(async () => {
     try {
-      const did = magic.wallet.connectWithUI;
-      if (did) navigate("/dashboard");
+      const did = await magic.wallet.connectWithUI();
+      if (did) {
+        navigate("/dashboard");
+      }
     } catch (err) {
       console.error(err);
     }
@@ -18,6 +21,7 @@ const Login = () => {
     try {
       localStorage.setItem("isOauthRedirect", true);
       await magic.oauth2.loginWithRedirect({
+        provider: "google",
         redirectURI: new URL("/dashboard", window.location.origin).href,
       });
     } catch (err) {
@@ -27,12 +31,12 @@ const Login = () => {
 
   return (
     <div className="container">
-    <h1>Welcome to Magic</h1>
-      <button>
+      <h1>Welcome to Magic</h1>
+      <button onClick={() => handleEmailOtpLogin()}>
         Login with Email OTP
       </button>
       <br />
-      <button onClick={() => handleSocialLogin('google')}>
+      <button onClick={() => handleSocialLogin()}>
         <FaGoogle size={"2.5rem"} />
         Log in with Google
       </button>
