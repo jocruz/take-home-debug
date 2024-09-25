@@ -10,7 +10,7 @@ function App() {
 
   const getMetadata = useCallback(async () => {
     try {
-      const metadata = await magic.user.getMetadata();
+      const metadata = await magic.user.getInfo();
       setUser(metadata);
     } catch (err) {
       navigate("/");
@@ -20,7 +20,7 @@ function App() {
 
   const printMetadata = useCallback(async () => {
     try {
-      const metadata = await magic.user.getMetadata();
+      const metadata = await magic.user.getInfo();
       console.log(metadata);
     } catch (err) {
       console.error(err);
